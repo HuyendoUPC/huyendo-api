@@ -11,10 +11,13 @@
  }
 
  */
+var XMLHttpRequest = require("xhr2");
 
-function getResponseJSON(from, to, outboundPartialDate, inboundPartialDate) {
+module.exports = {
+  getResponseJSON: function(from, to, outboundPartialDate, inboundPartialDate) {
     var postUrl = getAPIPostUrl(from, to, outboundPartialDate, inboundPartialDate);
     makeCorsRequest(postUrl);
+  }
 }
 
 function httpGet(postUrl) {
@@ -26,7 +29,7 @@ function httpGet(postUrl) {
 }
 
 function showResponseJSON(responseText) {
-    document.getElementById("demo").innerHTML = responseText;
+  console.log(responseText);
 }
 
 function getAPIPostUrl(from, to, outboundPartialDate, inboundPartialDate) {
@@ -55,17 +58,7 @@ function createSpecificSkyScannerPostUrl(market, currency, locale, originPlace, 
 // Create the XHR object.
 function createCORSRequest(method, url) {
     var client = new XMLHttpRequest();
-    if ("withCredentials" in client) {
-        // XHR for Chrome/Firefox/Opera/Safari.
-        client.open(method, url, true);
-    } else if (typeof XDomainRequest != "undefined") {
-        // XDomainRequest for IE.
-        client = new XDomainRequest();
-        client.open(method, url);
-    } else {
-        // CORS not supported.
-        client = null;
-    }
+    client.open(method, url, true);
     return client;
 }
 
@@ -74,7 +67,7 @@ function makeCorsRequest(url) {
     // This is a sample server that supports CORS.
     var xhr = createCORSRequest('GET', url);
     if (!xhr) {
-        alert('CORS not supported');
+        console.log('CORS not supported');
         return;
     }
 
@@ -82,12 +75,13 @@ function makeCorsRequest(url) {
     xhr.onload = function() {
         var text = xhr.responseText;
         showResponseJSON(text);
-        alert('Response from CORS request to ' + url + ': ' + title);
+        console.log('Response from CORS request to ' + url);
     };
 
     xhr.onerror = function() {
-        alert('Woops, there was an error making the request.');
+        console.log('Woops, there was an error making the request.');
     };
 
     xhr.send();
 }
+
