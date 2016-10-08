@@ -2,7 +2,7 @@ var route_finder = require('../app/route_finder.js');
 
 var places = {};
 var carriers = {};
-var quotes = {};
+var cheapestQuote = {};
 
 function storePlacesInfo(root) {
     var allPlaces = root.Places;
@@ -20,20 +20,24 @@ function storeCarriersInfo(root) {
 
 function storeFlightInfo(root) {
     var allQuotes = root.Quotes;
+    var cheapestFlight = {};
     allQuotes.forEach(function (quote) {
         var outboundLeg = quote.OutboundLeg;
-        quotes[quote.QuoteId] = new route_finder.Flight(
-            outboundLeg.OriginId,
-            outboundLeg.DestinationId,
-            outboundLeg.DepartureDate,
-            outboundLeg.DepartureDate,
-            quote.MinPrice);
+        if (cheapestFlight === {} || quote.MinPrice < cheapestFlight.minPrice) {
+            cheapestFlight = new route_finder.Flight(
+                outboundLeg.OriginId,
+                outboundLeg.DestinationId,
+                outboundLeg.DepartureDate,
+                outboundLeg.DepartureDate,
+                quote.MinPrice);
+        }
     });
+    cheapestQuote = cheapestFlight;
 }
 
 function storeAllInfo(root, findRouteCallback) {
     storeFlightInfo(responseText);
     storeCarriersInfo(responseText);
     storePlacesInfo(responseText);
-    findRouteCallback(places, carriers, quotes);
+    findRouteCallback(places, carriers, cheapestQuote);
 }

@@ -3,8 +3,8 @@ var FlightInfoStorer = require('./FlightInfoStorer.js');
 var routeFinder = require('../app/route_finder.js');
 
 module.exports = {
-    getResponseJSON: function (from, to, outboundPartialDate, inboundPartialDate) {
-        var postUrl = getAPIPostUrl(from, to, outboundPartialDate, inboundPartialDate);
+    getResponseJSON: function (from, to, outboundPartialDate) {
+        var postUrl = getAPIPostUrl(from, to, outboundPartialDate);
         makeCorsRequest(postUrl);
     }
 };
@@ -14,10 +14,10 @@ function storeFlightInfo(responseText) {
     console.log(responseText);
 }
 
-function getAPIPostUrl(from, to, outboundPartialDate, inboundPartialDate) {
+function getAPIPostUrl(from, to, outboundPartialDate) {
     var apiKey = getApiKey();
     var urlStem = "http://partners.api.skyscanner.net/apiservices/browseroutes/v1.0";
-    var searchOptions = createSpecificSkyScannerPostUrl("GB", "GBP", "en-GB", from, to, outboundPartialDate, inboundPartialDate, apiKey);
+    var searchOptions = createSpecificSkyScannerPostUrl("GB", "GBP", "en-GB", from, to, outboundPartialDate, apiKey);
     return urlStem.concat(searchOptions);
 }
 
@@ -25,7 +25,7 @@ function getApiKey() {
     return "prtl6749387986743898559646983194";
 }
 
-function createSpecificSkyScannerPostUrl(market, currency, locale, originPlace, destinationPlace, outboundPartialDate, inboundPartialDate, apiKey) {
+function createSpecificSkyScannerPostUrl(market, currency, locale, originPlace, destinationPlace, outboundPartialDate, apiKey) {
     return "/"
         .concat(market)
         .concat("/").concat(currency)
@@ -33,7 +33,6 @@ function createSpecificSkyScannerPostUrl(market, currency, locale, originPlace, 
         .concat("/").concat(originPlace)
         .concat("/").concat(destinationPlace)
         .concat("/").concat(outboundPartialDate)
-        .concat("/").concat(inboundPartialDate)
         .concat("?apiKey=").concat(apiKey);
 }
 
