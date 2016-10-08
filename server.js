@@ -2,6 +2,7 @@ var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 var routeFinder = require("./app/route_finder.js");
+var flightSelector = require("./app/flight_selector.js");
 var skyscanner = require("./skyscanner/SkyScannerJSONRetriever.js");
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -12,21 +13,20 @@ var port = process.env.PORT || 8080;
 var router = express.Router();
 
 router.post('/best_route', function (req, res) {
-  res.json(skyscanner.getResponseJSON("LHR", "CDG", "2017-02-11", "2017-02-15"));
-
-  var flights = getFlights( // this doesn't work yet
-    req.body.cities,
+  var selector = new flightSelector.FlightSelector(
+    JSON.parse(req.body.cities),
     req.body.start_city,
     req.body.end_city,
-    req.body.start_date
+    parseInt(req.body.start_date)
   );
+  var flights = selector.getFlights();
 
   var finder = new routeFinder.RouteFinder(
-    req.body.cities,
+    JSON.parse(req.body.cities),
     flights,
     req.body.start_city,
     req.body.end_city,
-    req.body.start_date
+    parseInt(req.body.start_date)
   );
 
   res.json(finder.solve());
