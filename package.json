@@ -1,0 +1,8 @@
+{
+  "name": "huyendo-api",
+  "main": "server.js",
+  "dependencies": {
+    "express": "4.14.0",
+    "body-parser": "1.9.2"
+  }
+}

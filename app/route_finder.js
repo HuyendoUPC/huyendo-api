@@ -1,21 +1,22 @@
-function Flight(from, to, date, arr_date, price) {
-  this.from = from;
-  this.to = to;
-  this.date = date;
-  this.arr_date = arr_date;
-  this.price = price;
+module.exports = {
+  Flight: function(from, to, date, arr_date, price) {
+    this.from = from;
+    this.to = to;
+    this.date = date;
+    this.arr_date = arr_date;
+    this.price = price;
+  },
+  RouteFinder: function(cities, flights, start_city, end_city, start_date) {
+    this.flights = flights;
+    this.graph = this.buildGraph(flights);
+    this.cities = cities;
+    this.start_city = start_city;
+    this.end_city = end_city;
+    this.start_date = start_date;
+  }
 }
 
-function RouteFinder(cities, flights, start_city, end_city, start_date) {
-  this.flights = flights;
-  this.graph = this.buildGraph(flights);
-  this.cities = cities;
-  this.start_city = start_city;
-  this.end_city = end_city;
-  this.start_date = start_date;
-}
-
-RouteFinder.prototype.buildGraph = function() {
+module.exports.RouteFinder.prototype.buildGraph = function() {
   var graph = {};
 
   this.flights.forEach(function(flight, idx) {
@@ -33,7 +34,7 @@ RouteFinder.prototype.buildGraph = function() {
   return graph;
 };
 
-RouteFinder.prototype.getBestRoute = function(visited, curCity, curDate) {
+module.exports.RouteFinder.prototype.getBestRoute = function(visited, curCity, curDate) {
   visited[curCity] = true;
   var best_route = null;
 
@@ -68,7 +69,7 @@ RouteFinder.prototype.getBestRoute = function(visited, curCity, curDate) {
   return best_route;
 };
 
-RouteFinder.prototype.solve = function() {
+module.exports.RouteFinder.prototype.solve = function() {
   visited = {};
 
   return this.getBestRoute(visited, this.start_city, this.start_date).route;
