@@ -55,13 +55,15 @@ function makeCorsRequest(url, routes, flights, req, res) {
         count++;
         if(count === flights.length) {
           var finder = new routeFinder.RouteFinder(
-            JSON.parse(req.body.cities),
+            req.body.cities,
             routes,
             req.body.start_city,
             req.body.end_city,
             new Date(req.body.start_date)
           );
-          res.json(finder.solve());
+          var solution = finder.solve();
+          console.log(solution);
+          res.json(solution);
         }
         console.log('Response from CORS request to ' + url);
 
