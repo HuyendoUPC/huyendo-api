@@ -2,7 +2,7 @@ var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 var routeFinder = require("./app/route_finder.js");
-var skyscanner = require("./skyscanner/flights.js");
+var skyscanner = require("./skyscanner/SkyScannerJSONRetriever.js");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

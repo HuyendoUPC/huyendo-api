@@ -1,40 +1,19 @@
-//API for getting the JSON object for a flight, in following format:
-/*
-
- {
- from:
- to:
- departure_date:
- arrival_date:
- flight_duration:
- price:
- }
-
- */
 var XMLHttpRequest = require("xhr2");
 
 module.exports = {
-  getResponseJSON: function(from, to, outboundPartialDate, inboundPartialDate) {
-    var postUrl = getAPIPostUrl(from, to, outboundPartialDate, inboundPartialDate);
-    makeCorsRequest(postUrl);
-  }
-}
-
-function httpGet(postUrl) {
-    var client = createCORSRequest(postUrl);
-    client.onload = function () {
-        showResponseJSON(client.responseText);
-    };
-    client.send();
-}
+    getResponseJSON: function (from, to, outboundPartialDate, inboundPartialDate) {
+        var postUrl = getAPIPostUrl(from, to, outboundPartialDate, inboundPartialDate);
+        makeCorsRequest(postUrl);
+    }
+};
 
 function showResponseJSON(responseText) {
-  console.log(responseText);
+    console.log(responseText);
 }
 
 function getAPIPostUrl(from, to, outboundPartialDate, inboundPartialDate) {
     var apiKey = getApiKey();
-    var urlStem = "http://partners.api.skyscanner.net/apiservices/browseroutes/v1.0"
+    var urlStem = "http://partners.api.skyscanner.net/apiservices/browseroutes/v1.0";
     var searchOptions = createSpecificSkyScannerPostUrl("GB", "GBP", "en-GB", from, to, outboundPartialDate, inboundPartialDate, apiKey);
     return urlStem.concat(searchOptions);
 }
@@ -72,16 +51,15 @@ function makeCorsRequest(url) {
     }
 
     // Response handlers.
-    xhr.onload = function() {
+    xhr.onload = function () {
         var text = xhr.responseText;
         showResponseJSON(text);
         console.log('Response from CORS request to ' + url);
     };
 
-    xhr.onerror = function() {
+    xhr.onerror = function () {
         console.log('Woops, there was an error making the request.');
     };
 
     xhr.send();
 }
-
