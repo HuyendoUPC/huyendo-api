@@ -1,10 +1,11 @@
 module.exports = {
-  Flight: function(from, to, date, arr_date, price) {
+  Flight: function(from, to, date, arr_date, price, carrier) {
     this.from = from;
     this.to = to;
     this.date = date;
     this.arr_date = arr_date;
     this.price = price;
+    this.carrier = carrier;
   },
   RouteFinder: function(cities, flights, start_city, end_city, start_date) {
     this.flights = flights;
@@ -14,6 +15,12 @@ module.exports = {
     this.end_city = end_city;
     this.start_date = start_date;
   }
+}
+
+function addDays(date, days) {
+  var result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
 }
 
 module.exports.RouteFinder.prototype.buildGraph = function() {
@@ -53,7 +60,7 @@ module.exports.RouteFinder.prototype.getBestRoute = function(visited, curCity, c
       return;
     }
 
-    next_route = this.getBestRoute(visited, flight.to, flight.arr_date + cities[flight.to]);
+    next_route = this.getBestRoute(visited, flight.to, addDays(flight.arr_date, cities[flight.to]));
     next_route.price += flight.price;
     next_route.route.unshift(flight);
 

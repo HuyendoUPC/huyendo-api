@@ -17,7 +17,7 @@ router.post('/best_route', function (req, res) {
     JSON.parse(req.body.cities),
     req.body.start_city,
     req.body.end_city,
-    parseInt(req.body.start_date)
+    new Date(req.body.start_date)
   );
   var flights = selector.getFlights();
 
@@ -26,7 +26,7 @@ router.post('/best_route', function (req, res) {
     flights,
     req.body.start_city,
     req.body.end_city,
-    parseInt(req.body.start_date)
+    new Date(req.body.start_date)
   );
 
   res.json(finder.solve());

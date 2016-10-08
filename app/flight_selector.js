@@ -1,3 +1,5 @@
+Skyscanner = require("../skyscanner/SkyScannerJSONRetriever.js")
+
 module.exports = {
   FlightSelector: function(cities, start_city, end_city, start_date) {
     this.cities = cities;
@@ -8,9 +10,24 @@ module.exports = {
   }
 }
 
+function addDays(date, days) {
+  var result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
 module.exports.FlightSelector.prototype.getFlights = function() {
-  var visited = {}
+  var visited = {};
   this.fillFlights(this.start_city, this.start_date, visited);
+
+  console.log(this.flights);
+
+  var routes = [];
+  this.flights.forEach(function(flight, idx) {
+    Skyscanner.getResponseJSON(flight, routes);
+  });
+
+  while(routes.length !== this.flights.length);
 
   return this.flights;
 }
@@ -21,11 +38,11 @@ module.exports.FlightSelector.prototype.fillFlights = function(curCity, curDate,
   Object.keys(this.cities).forEach(function(city) {
     if(!visited[city]) {
       this.flights.push({
-        originPlace: curCity,
-        destinationPlace: city,
+        from: curCity,
+        to: city,
         outboundPartialDate: curDate
       })
-      this.fillFlights(city, curDate + this.cities[city], visited)
+      this.fillFlights(city, addDays(curDate, this.cities[city]), visited)
     }
   }, this);
 
@@ -34,8 +51,8 @@ module.exports.FlightSelector.prototype.fillFlights = function(curCity, curDate,
         return visited[val];
   })) {
     this.flights.push({
-      originPlace: curCity,
-      destinationPlace: this.end_city,
+      from: curCity,
+      to: this.end_city,
       outboundPartialDate: curDate
     });
   }

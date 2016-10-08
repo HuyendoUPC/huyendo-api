@@ -4,6 +4,7 @@
   "dependencies": {
     "express": "*",
     "body-parser": "*",
-    "xhr2": "*"
+    "xhr2": "*",
+    "momentjs": "*"
   }
 }
