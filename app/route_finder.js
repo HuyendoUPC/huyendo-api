@@ -14,6 +14,7 @@ module.exports = {
     this.start_city = start_city;
     this.end_city = end_city;
     this.start_date = start_date;
+    this.best_paths = [];
   }
 };
 
@@ -41,7 +42,7 @@ module.exports.RouteFinder.prototype.buildGraph = function() {
   return graph;
 };
 
-module.exports.RouteFinder.prototype.getBestRoute = function(visited, curCity, curDate) {
+module.exports.RouteFinder.prototype.getBestRoute = function(visited, curPath, curCity, curDate) {
   visited[curCity] = true;
   var best_route = null;
 
@@ -55,40 +56,31 @@ module.exports.RouteFinder.prototype.getBestRoute = function(visited, curCity, c
   this.graph[curCity][curDate].forEach(function (flight_idx) {
     var flight = this.flights[flight_idx];
 
+    var new_path = JSON.parse(JSON.stringify(curPath));
+    new_path.route.push(flight);
+    new_path.price += flight.price;
+
     if(flight.to === this.end_city) {
-      best_route = {
-        route: [flight],
-        price: flight.price
-      };
-      return;
+      this.best_paths.push(new_path);
+      this.best_paths.sort(function (a, b) {
+        return a.price - b.price;
+      })
+      this.best_paths = this.best_paths.slice(0, 3);
     }
-
-    if(visited[flight.to]) {
-      return;
-    }
-
-    next_route = this.getBestRoute(visited, flight.to, addDays(flight.arr_date, this.cities[flight.to]));
-    next_route.price += flight.price;
-    next_route.route.unshift(flight);
-
-    if(best_route === null) {
-      best_route = next_route;
-    }
-    else if(next_route.price < best_route.price) {
-      best_route = next_route;
+    else if(!visited[flight.to]) {
+      this.getBestRoute(visited, new_path, flight.to, addDays(flight.arr_date, this.cities[flight.to]));
     }
   }, this);
 
   visited[curCity] = false;
-  return best_route;
 };
 
 module.exports.RouteFinder.prototype.solve = function() {
   visited = {};
 
   try {
-    best = this.getBestRoute(visited, this.start_city, this.start_date);
-    return best.route;
+    this.getBestRoute(visited, { route: [], price: 0 }, this.start_city, this.start_date);
+    return this.best_paths;
   } catch (e) {
     return "Impossible to get route";
   }
