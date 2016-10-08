@@ -1,3 +1,5 @@
+var route_finder = require('../app/route_finder.js');
+
 var places = {};
 var carriers = {};
 var quotes = {};
@@ -20,11 +22,11 @@ function storeFlightInfo(root) {
     var allQuotes = root.Quotes;
     allQuotes.forEach(function (quote) {
         var outboundLeg = quote.OutboundLeg;
-        quotes[quote.QuoteId] = {
-            minPrice: quote.MinPrice,
-            carrier: outboundLeg.CarrierIds[0],
-            originId: outboundLeg.OriginId,
-            destinationId: outboundLeg.DestinationId,
-            departureDate: outboundLeg.DepartureDate};
+        quotes[quote.QuoteId] = new route_finder.Flight(
+            outboundLeg.OriginId,
+            outboundLeg.DestinationId,
+            outboundLeg.DepartureDate,
+            outboundLeg.DepartureDate,
+            quote.MinPrice);
     });
 }
