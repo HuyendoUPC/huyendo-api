@@ -15,20 +15,6 @@ module.exports = {
   }
 };
 
-function addDays(date, days) {
-  var result = new Date(date);
-  result.setDate(result.getDate() + days);
-  return result;
-}
-
-function storeFlightInfo(responseText, routes) {
-  FlightInfoStorer.storeAllInfo(responseText, routes);
-}
-
-function getAPIPostUrlFromFlight(flight) {
-    return getAPIPostUrl(flight.from, flight.to, flight.date);
-}
-
 function getAPIPostUrl(from, to, outboundPartialDate) {
   var apiKey = getApiKey();
   var urlStem = "http://partners.api.skyscanner.net/apiservices/browsequotes/v1.0";
@@ -55,7 +41,7 @@ function createSpecificSkyScannerPostUrl(market, currency, locale, originPlace, 
 function makeCorsRequest(url, routes, flights, req, res) {
     // This is a sample server that supports CORS.
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", url, true)
+    xhr.open("GET", url, true);
     if (!xhr) {
         console.log('CORS not supported');
         return;

@@ -9,14 +9,14 @@ module.exports = {
   },
   RouteFinder: function(cities, flights, start_city, end_city, start_date) {
     this.flights = flights;
-    this.graph = this.buildGraph(flights);
+    this.graph = this.buildGraph();
     this.cities = cities;
     this.start_city = start_city;
     this.end_city = end_city;
     this.start_date = start_date;
     console.log(start_date);
   }
-}
+};
 
 function addDays(date, days) {
   var result = new Date(date);
@@ -55,7 +55,7 @@ module.exports.RouteFinder.prototype.getBestRoute = function(visited, curCity, c
     if(flight.to === this.end_city) {
       best_route = {
         route: [flight],
-        price: flight.price,
+        price: flight.price
       };
       return;
     }

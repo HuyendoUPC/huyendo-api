@@ -44,4 +44,4 @@ module.exports = {
   storeAllInfo: function(root, routes) {
       routes.push(storeFlightInfo(root));
   }
-}
+};
