@@ -7,6 +7,7 @@ module.exports = {
     this.end_city = end_city;
     this.start_date = start_date;
     this.flights = [];
+    this.done = {};
   }
 };
 
@@ -29,26 +30,50 @@ module.exports.FlightSelector.prototype.getFlights = function(req, res) {
 module.exports.FlightSelector.prototype.fillFlights = function(curCity, curDate, visited) {
   visited[curCity] = true;
 
+  function contains(list, elem) {
+    var i;
+    for (i = 0; i < list.length; i++) {
+      el = list[i];
+
+      if (el.from === elem.from
+          && el.to === elem.to
+          && el.outboundPartialDate.getTime() === elem.outboundPartialDate.getTime()) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   Object.keys(this.cities).forEach(function(city) {
     if(!visited[city]) {
-      this.flights.push({
+      new_flight = {
         from: curCity,
         to: city,
         outboundPartialDate: curDate
-      });
+      };
+
+      if(!contains(this.flights, new_flight)) {
+        this.flights.push(new_flight);
+      }
+
       this.fillFlights(city, addDays(curDate, this.cities[city]), visited)
     }
   }, this);
 
   if(
-      Object.keys(visited).every(function(val) {
+      Object.keys(this.cities).every(function(val) {
         return visited[val];
   })) {
-    this.flights.push({
+    new_flight = {
       from: curCity,
       to: this.end_city,
       outboundPartialDate: curDate
-    });
+    };
+   
+    if(!contains(this.flights, new_flight)) {
+      this.flights.push(new_flight);
+    }
   }
   
   visited[curCity] = false;
