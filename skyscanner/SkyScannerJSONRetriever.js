@@ -14,6 +14,10 @@ function storeFlightInfo(responseText) {
     console.log(responseText);
 }
 
+function getAPIPostUrlFromFlight(flight) {
+    return getAPIPostUrl(flight.from, flight.to, flight.date);
+}
+
 function getAPIPostUrl(from, to, outboundPartialDate) {
     var apiKey = getApiKey();
     var urlStem = "http://partners.api.skyscanner.net/apiservices/browseroutes/v1.0";

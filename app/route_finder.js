@@ -42,7 +42,7 @@ module.exports.RouteFinder.prototype.getBestRoute = function(visited, curCity, c
     var flight = this.flights[flight_idx];
 
     if(flight.to === this.end_city) {
-      best_route = { 
+      best_route = {
         route: [flight],
         price: flight.price,
       };
@@ -73,10 +73,6 @@ module.exports.RouteFinder.prototype.solve = function() {
   visited = {};
 
   return this.getBestRoute(visited, this.start_city, this.start_date).route;
-};
-
-module.exports.RouteFinder.prototype.findRoute = function () {
-
 };
 
 // TEST CODE HERE

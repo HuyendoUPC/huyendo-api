@@ -39,5 +39,4 @@ function storeAllInfo(root, findRouteCallback) {
     storeFlightInfo(responseText);
     storeCarriersInfo(responseText);
     storePlacesInfo(responseText);
-    findRouteCallback(places, carriers, cheapestQuote);
 }
