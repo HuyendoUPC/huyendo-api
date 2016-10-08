@@ -13,7 +13,7 @@ var router = express.Router();
 
 router.post('/best_route', function (req, res) {
   var selector = new flightSelector.FlightSelector(
-    JSON.parse(req.body.cities),
+    req.body.cities,
     req.body.start_city,
     req.body.end_city,
     new Date(req.body.start_date)
