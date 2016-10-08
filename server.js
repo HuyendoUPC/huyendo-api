@@ -10,7 +10,7 @@ var port = process.env.PORT || 8080;
 
 var router = express.Router();
 
-router.route('/best_route').post(function (req, res) {
+router.post('/best_route', function (req, res) {
   var flights = getFlights( // this doesn't work yet
     req.body.cities,
     req.body.start_city,
