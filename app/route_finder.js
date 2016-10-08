@@ -47,7 +47,7 @@ module.exports.RouteFinder.prototype.getBestRoute = function(visited, curCity, c
 
   curDate = curDate.toISOString().slice(0, curDate.toISOString().length - 5);
 
-  if(!this.graph[curCity] || !this.graph[curCity][curDate]) {
+  if(this.graph[curCity] === undefined || this.graph[curCity][curDate] === undefined) {
     visited[curCity] = false;
     return;
   }
@@ -87,7 +87,8 @@ module.exports.RouteFinder.prototype.solve = function() {
   visited = {};
 
   try {
-    return this.getBestRoute(visited, this.start_city, this.start_date).route;
+    best = this.getBestRoute(visited, this.start_city, this.start_date);
+    return best.route;
   } catch (e) {
     return "Impossible to get route";
   }

@@ -11,7 +11,6 @@ function storePlacesInfo(root) {
 }
 
 function storeFlightInfo(root) {
-    root = JSON.parse(root);
     var allQuotes = root.Quotes;
     var places = storePlacesInfo(root);
     var cheapestFlight = new route_finder.Flight(
@@ -42,7 +41,9 @@ function storeFlightInfo(root) {
 
 module.exports = {
   storeAllInfo: function(root, routes) {
-    if(root.Quotes === undefined) {
+    root = JSON.parse(root);
+
+    if(root.Quotes.length === 0) {
       return;
     }
     
