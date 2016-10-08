@@ -6,30 +6,26 @@ module.exports = {
     this.start_city = start_city;
     this.end_city = end_city;
     this.start_date = start_date;
+    console.log(start_date);
     this.flights = [];
   }
 }
 
 function addDays(date, days) {
+  console.log(days);
   var result = new Date(date);
   result.setDate(result.getDate() + days);
   return result;
 }
 
-module.exports.FlightSelector.prototype.getFlights = function() {
+module.exports.FlightSelector.prototype.getFlights = function(req, res) {
   var visited = {};
   this.fillFlights(this.start_city, this.start_date, visited);
 
-  console.log(this.flights);
-
   var routes = [];
-  this.flights.forEach(function(flight, idx) {
-    Skyscanner.getResponseJSON(flight, routes);
-  });
-
-  while(routes.length !== this.flights.length);
-
-  return this.flights;
+  this.flights.forEach(function(flight) {
+    Skyscanner.getResponseJSON(flight, routes, this.flights, req, res);
+  }, this);
 }
 
 module.exports.FlightSelector.prototype.fillFlights = function(curCity, curDate, visited) {

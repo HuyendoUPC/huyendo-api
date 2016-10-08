@@ -5,15 +5,21 @@ var moment = require("momentjs");
 var http = require("http");
 
 module.exports = {
-  getResponseJSON: function (flight, routes) {
+  getResponseJSON: function (flight, routes, flights, req, res) {
     var postUrl = getAPIPostUrl(
       flight.from,
       flight.to,
       flight.outboundPartialDate
     );
-    makeCorsRequest(postUrl, routes);
+    makeCorsRequest(postUrl, routes, flights, req, res);
   }
 };
+
+function addDays(date, days) {
+  var result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
 
 function storeFlightInfo(responseText, routes) {
   FlightInfoStorer.storeAllInfo(responseText, routes);
@@ -25,7 +31,7 @@ function getAPIPostUrlFromFlight(flight) {
 
 function getAPIPostUrl(from, to, outboundPartialDate) {
   var apiKey = getApiKey();
-  var urlStem = "http://partners.api.skyscanner.net/apiservices/browseroutes/v1.0";
+  var urlStem = "http://partners.api.skyscanner.net/apiservices/browsequotes/v1.0";
   var searchOptions = createSpecificSkyScannerPostUrl("GB", "GBP", "en-GB", from, to, outboundPartialDate, apiKey);
   return urlStem.concat(searchOptions);
 }
@@ -46,7 +52,7 @@ function createSpecificSkyScannerPostUrl(market, currency, locale, originPlace, 
 }
 
 // Make the actual CORS request.
-function makeCorsRequest(url, routes) {
+function makeCorsRequest(url, routes, flights, req, res) {
     // This is a sample server that supports CORS.
     var xhr = new XMLHttpRequest();
     xhr.open("GET", url, true)
@@ -58,14 +64,25 @@ function makeCorsRequest(url, routes) {
     // Response handlers.
     xhr.onload = function () {
         var text = xhr.responseText;
+        FlightInfoStorer.storeAllInfo(text, routes);
+        if(routes.length === flights.length) {
+          var finder = new routeFinder.RouteFinder(
+            JSON.parse(req.body.cities),
+            routes,
+            req.body.start_city,
+            req.body.end_city,
+            new Date(req.body.start_date)
+          );
+          res.json(finder.solve());
+        }
         console.log('Response from CORS request to ' + url);
+
     };
 
     xhr.onerror = function () {
         console.log('Woops, there was an error making the request.');
     };
 
-    console.log(url);
     xhr.setRequestHeader("Accept", "application/json");
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.send();

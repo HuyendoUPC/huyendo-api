@@ -14,6 +14,7 @@ module.exports = {
     this.start_city = start_city;
     this.end_city = end_city;
     this.start_date = start_date;
+    console.log(start_date);
   }
 }
 
@@ -38,12 +39,15 @@ module.exports.RouteFinder.prototype.buildGraph = function() {
     graph[flight.from][flight.date].push(idx);
   });
 
+  console.log(graph);
   return graph;
 };
 
 module.exports.RouteFinder.prototype.getBestRoute = function(visited, curCity, curDate) {
   visited[curCity] = true;
   var best_route = null;
+
+  curDate = curDate.toISOString().slice(0, curDate.toISOString().length - 5);
 
   this.graph[curCity][curDate].forEach(function (flight_idx) {
     var flight = this.flights[flight_idx];
@@ -60,7 +64,7 @@ module.exports.RouteFinder.prototype.getBestRoute = function(visited, curCity, c
       return;
     }
 
-    next_route = this.getBestRoute(visited, flight.to, addDays(flight.arr_date, cities[flight.to]));
+    next_route = this.getBestRoute(visited, flight.to, addDays(flight.arr_date, this.cities[flight.to]));
     next_route.price += flight.price;
     next_route.route.unshift(flight);
 
