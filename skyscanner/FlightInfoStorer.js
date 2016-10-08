@@ -42,6 +42,10 @@ function storeFlightInfo(root) {
 
 module.exports = {
   storeAllInfo: function(root, routes) {
-      routes.push(storeFlightInfo(root));
+    if(root.Quotes === undefined) {
+      return;
+    }
+    
+    routes.push(storeFlightInfo(root));
   }
 };

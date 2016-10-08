@@ -46,12 +46,14 @@ function makeCorsRequest(url, routes, flights, req, res) {
         console.log('CORS not supported');
         return;
     }
+    var count = 0;
 
     // Response handlers.
     xhr.onload = function () {
         var text = xhr.responseText;
         FlightInfoStorer.storeAllInfo(text, routes);
-        if(routes.length === flights.length) {
+        count++;
+        if(count === flights.length) {
           var finder = new routeFinder.RouteFinder(
             JSON.parse(req.body.cities),
             routes,
