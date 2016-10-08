@@ -15,4 +15,15 @@ function getSolutionRouteData(flights) {
     }
 }
 
+//@parameter solutions:
+//      this object contains 3 routes. best: the best route, second: the second best route, third: the third best route.
+//@returns:
+//      an object containing the route data for each of the 3 best routes.
+function getDataForAllSolutionFlights(solutions) {
+    return {
+        best: getSolutionRouteData(solutions.best),
+        second: getSolutionRouteData(solutions.second),
+        third: getSolutionRouteData(solutions.third)
+    }
+}
 
