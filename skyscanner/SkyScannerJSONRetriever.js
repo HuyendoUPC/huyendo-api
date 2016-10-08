@@ -46,7 +46,7 @@ function makeCorsRequest(url, routes, flights, req, res) {
         console.log('CORS not supported');
         return;
     }
-    var count = 0;
+    count = 0;
 
     // Response handlers.
     xhr.onload = function () {

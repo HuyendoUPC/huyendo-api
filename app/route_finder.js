@@ -38,7 +38,6 @@ module.exports.RouteFinder.prototype.buildGraph = function() {
     graph[flight.from][flight.date].push(idx);
   });
 
-  console.log(graph);
   return graph;
 };
 
@@ -48,7 +47,7 @@ module.exports.RouteFinder.prototype.getBestRoute = function(visited, curCity, c
 
   curDate = curDate.toISOString().slice(0, curDate.toISOString().length - 5);
 
-  if(!this.graph[curCity][curDate]) {
+  if(!this.graph[curCity] || !this.graph[curCity][curDate]) {
     visited[curCity] = false;
     return;
   }
@@ -87,7 +86,11 @@ module.exports.RouteFinder.prototype.getBestRoute = function(visited, curCity, c
 module.exports.RouteFinder.prototype.solve = function() {
   visited = {};
 
-  return this.getBestRoute(visited, this.start_city, this.start_date).route;
+  try {
+    return this.getBestRoute(visited, this.start_city, this.start_date).route;
+  } catch (e) {
+    return "Impossible to get route";
+  }
 };
 
 // TEST CODE HERE

@@ -6,13 +6,11 @@ module.exports = {
     this.start_city = start_city;
     this.end_city = end_city;
     this.start_date = start_date;
-    console.log(start_date);
     this.flights = [];
   }
 };
 
 function addDays(date, days) {
-  console.log(days);
   var result = new Date(date);
   result.setDate(result.getDate() + days);
   return result;
