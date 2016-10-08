@@ -1,4 +1,6 @@
 var XMLHttpRequest = require("xhr2");
+var FlightInfoStorer = require('./FlightInfoStorer.js');
+var routeFinder = require('../app/route_finder.js');
 
 module.exports = {
     getResponseJSON: function (from, to, outboundPartialDate, inboundPartialDate) {
@@ -7,7 +9,8 @@ module.exports = {
     }
 };
 
-function showResponseJSON(responseText) {
+function storeFlightInfo(responseText) {
+    FlightInfoStorer.storeAllInfo(responseText, routeFinder.findRoute);
     console.log(responseText);
 }
 
@@ -53,7 +56,7 @@ function makeCorsRequest(url) {
     // Response handlers.
     xhr.onload = function () {
         var text = xhr.responseText;
-        showResponseJSON(text);
+        storeFlightInfo(text);
         console.log('Response from CORS request to ' + url);
     };
 

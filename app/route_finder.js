@@ -75,6 +75,10 @@ module.exports.RouteFinder.prototype.solve = function() {
   return this.getBestRoute(visited, this.start_city, this.start_date).route;
 };
 
+module.exports.RouteFinder.prototype.findRoute = function () {
+  
+};
+
 // TEST CODE HERE
 /*
 cities = {
